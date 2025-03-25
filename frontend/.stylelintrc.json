@@ -1,0 +1,12 @@
+{
+  "extends": "stylelint-config-standard-scss",
+  "rules": {
+    "scss/dollar-variable-pattern": null,
+    "declaration-empty-line-before": "never",
+    "selector-class-pattern": null,
+    "no-empty-source": null,
+    "font-family-name-quotes": null,
+    "media-query-no-invalid": null,
+    "media-feature-range-notation": "prefix"
+  }
+}
