@@ -1,2 +1,6 @@
 gameverse
 node_modules
+.env
+postgres_data
+.vscode
+.vscode/settings.json

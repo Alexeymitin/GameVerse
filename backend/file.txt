@@ -1,1 +1,795 @@
 privet! fail
+package main
+
+import (
+	"fmt"
+	"io"
+	"log"
+	"net"
+	"os"
+	"runtime"
+	"unsafe"
+)
+
+// var x = 10
+
+func main() {
+	// ReadFile()
+	// WriteFile("privet! fail", "file.txt")
+
+	// var a int
+	// b := []int32("abc")
+
+	// fmt.Println(a, b)
+
+	// printHello(x)
+
+	// var integer int8 = 10
+	// var bigInteger = int32(integer)
+
+	// var floatNum = 10.52
+	// var intNum = int(floatNum)
+
+	// intToString := fmt.Sprintf("%d", 12) // шаблон %d означает целое число в десятичной системе счисления
+	// floatToString := fmt.Sprint(34.56)   // "34.56"
+
+	// fmt.Println(intToString, floatToString, bigInteger, intNum)
+
+	// num, err := strconv.Atoi("123")
+
+	// if err != nil {
+	// 	fmt.Println("Error converting string to integer:", err)
+	// 	return
+	// }
+
+	// fmt.Println("Converted number:", num)
+
+	// if num1 := 12; num1%2 == 0 {
+	// 	fmt.Println("Число чётное")
+	// } else {
+	// 	fmt.Println("Число нечётное")
+	// }
+
+	// num3 := 0
+	// switch num3 == 0 {
+	// case num3 == 0:
+	// 	fmt.Printf("Число равно нулю\n")
+	// case num3 > 0:
+	// 	fmt.Printf("Число положительное\n")
+	// default:
+	// 	fmt.Printf("Число отрицательное\n")
+	// }
+
+	// num4 := 3
+	// switch {
+	// case num4 < 5:
+	// 	fmt.Println("Число меньше пяти")
+	// 	fallthrough // если число меньше 5, то оно точно меньше 10, поэтому здесь можно указать fallthrough
+	// case num4 < 10:
+	// 	fmt.Println("Число меньше десяти")
+	// 	fallthrough
+	// case num4 < 100:
+	// 	fmt.Println("Число меньше ста")
+	// default:
+	// 	fmt.Println("Число больше пяти")
+	// }
+
+	// for i := range 5 {
+	// 	fmt.Println(i)
+	// }
+
+	// arr := [3]int{1, 2, 3}
+	// for i, val := range arr {
+	// 	fmt.Println("Index:", i, "Value:", val)
+	// }
+
+	// str := "privet"
+	// for i, r := range str {
+	// 	fmt.Printf("Index: %d, Rune: %c\n", i, r)
+	// }
+
+	// fmt.Println("Length in runes:", utf8.RuneCountInString(str)) // 6\
+
+	// arr1 := []string{"приветики", "Go", "Программисты ли ты?"}
+
+	// for i, val := range arr1 {
+	// 	fmt.Println("Index:", i, "Value:", val)
+	// }
+
+	// strBytes := []byte("привет мир")
+
+	// fmt.Println(strBytes)
+
+	// for i, val := range strBytes {
+	// 	fmt.Println("Index:", i, "Value:", val)
+	// }
+
+	// i := 1
+	// for i < 10 {
+	// 	fmt.Println(i * i)
+	// 	i++
+	// }
+
+	// for i := 1; i <= 10; i++ {
+	// 	for j := 1; j <= 10; j++ {
+	// 		fmt.Print(i*j, "\t")
+	// 	}
+	// 	fmt.Println()
+	// }
+
+	// fmt.Println(max(1, 2))
+
+	// var num5 int
+	// fmt.Println("Значение num5 до увеличения:", num5) // 0
+	// incrementValue(&num5)
+	// fmt.Println("Значение num5 после увеличения:", num5) // 0
+
+	// for i := 1; i < 6; i++ {
+	// 	defer fmt.Println(i)
+	// }
+
+	// var arr3 = [3]int{1, 2, 3}
+
+	// changeArray(&arr3, 3)
+	// fmt.Println("Массив после изменения:", arr3) // [1 2 3]
+
+	// var slice1 []int
+
+	// slice2 := []string{"1", "2"}
+	// slice3 := make([]string, 4)
+	// slice4 := make([]int, 3, 5)
+	// slice5 := arr1[:]
+
+	// first := []int{1, 2, 3}
+	// second := first     // []int{1, 2, 3}
+	// third := first[0:2] // []int{1, 2}
+
+	// second[0] = 10
+	// third[1] = 20
+	// fmt.Println(first, second, third)
+	// Вывод:
+	// [10 20 3] [10 20 3] [10 20]
+
+	// second = append(second, 60) // теперь second не ссылается на first
+	// second[0] = 30
+	// fmt.Println(first, second, third)
+	// Вывод:
+	// [10 20 3] [30 20 3 60] [10 20]
+
+	// slc1 := []int{10, 11, 12}
+	// slc2 := []int{13, 14, 15}
+	// slc1 = append(slc1, slc2...)
+	// fmt.Println(slc1) // [10 11 12 13 14 15]
+
+	// slc3 := append([]int(nil), slc2...) // создание копии slc2
+	// slc2 = append(slc2, slc2...)        // добавление slc2 в конец slc2
+	// fmt.Println(slc2, slc3)             // [13 14 15 13 14 15] [13 14 15]
+
+	// Создаём слайс с длиной 3 и ёмкостью 3
+	// slice := []int{1, 2, 3}
+	// fmt.Printf("Before append: slice=%v, len=%d, cap=%d, ptr=%p\n", slice, len(slice), cap(slice), slicePointer(slice))
+
+	// Добавляем элемент
+	// newSlice := append(slice, 4)
+	// fmt.Printf("After append: slice=%v, len=%d, cap=%d, ptr=%p\n", newSlice, len(newSlice), cap(newSlice), slicePointer(newSlice))
+
+	// Изменяем новый слайс
+	// newSlice[0] = 10
+	// fmt.Println("Original slice:", slice)
+	// fmt.Println("New slice:", newSlice)
+
+	// if slicePointer(newSlice) == slicePointer(slice) {
+	// 	fmt.Println("Pointers are the same")
+	// } else {
+	// 	fmt.Println("Pointers are different")
+	// }
+
+	// slc := []int{1, 2}
+	// n3 := copy(slc, []int{3, 4, 5})
+	// fmt.Println(n3, slc) // 2 [3, 4]
+
+	// slc4 := []int{1, 2, 3, 4}
+	// n5 := copy(slc4, []int{5, 6})
+	// fmt.Println(n5, slc4) // 2 [5, 6, 3, 4]
+
+	// slc5 := []int{1, 2, 3, 4}
+	// n2 := copy(slc5, slc5[2:])
+	// fmt.Println(n2, slc5) // 2 [3 4 3 4]
+
+	// slc := []int{5, 9, 1, 100}
+	// max := slices.Max(slc)
+	// fmt.Println("Максимальное значение в срезе:", max)
+	// fmt.Println(slicePointer(slc))
+
+	// slc1 := []int{4, 3, 5, 2, 6, 1}
+	// slices.Sort(slc1) // [1 2 3 4 5 6]
+	// fmt.Println("Отсортированный срез:", slc1)
+
+	// slc2 := []int{1, 2, 7, 3}
+	// slc3 := []int{2, 3, 1, 7}
+	// fmt.Println("Сравнение слайсов:", slices.Compare(slc2, slc3)) // -1
+
+	// slc5 := []int{1, 2, 7, 3}
+	// fmt.Println("Содержит ли слайс элемент 1:", slices.Contains(slc5, 1))
+	// fmt.Println("Содержит ли слайс элемент 4:", slices.Contains(slc5, 4))
+
+	// slc6 := []int{1, 2, 7, 3}
+	// slc = slices.Delete(slc6, 0, 2)
+	// fmt.Println(slc) // [7, 3]
+	// fmt.Println(slicePointer(slc))
+
+	// // letters := []string{"alpha", "delta"}
+	// // letters = slices.Insert(letters, 1, "beta", "gamma") // ["alpha", "beta", "gamma", "delta"]
+	// // fmt.Println(letters)
+
+	// rusText := "текст"
+	// fmt.Println(rusText[0], rusText[1]) // 209 130
+	// // 209 = D1 и 130 = 82 в 16-ричном представлении,
+	// // D1 82 является кодом буквы "т" в UTF-8
+
+	// str := "текст"
+	// fmt.Println(str[0:2]) // т
+	// fmt.Println(str[0:1]) // �
+
+	// for idx, char := range rusText {
+	// 	fmt.Printf("Руна: %#U с индексом %d\n", char, idx)
+	// }
+	// fmt.Println("Длина строки:", len(rusText))
+
+	// ln := len(str)                                       // 10
+	// correctLen1 := utf8.RuneCountInString(str)           // 5
+	// correctLen2 := len([]rune(str))                      // 5
+	// fmt.Println("Длина строки:", ln)                     // 10
+	// fmt.Println("Правильная длина строки:", correctLen1) // 5
+	// fmt.Println("Правильная длина строки:", correctLen2) // 5
+
+	// for _, sym := range str {
+	// 	fmt.Printf("%c \n", sym) // т е к с т
+	// }
+
+	// //Подсчет вхождений символа в строку – strings.Count(s, substr string) int:
+	// strings.Count(str, "и") // 2
+
+	// //Замена символов – strings.Replace(s, old, new string, n int) string:
+	// // последний аргумент - количество замен
+	// // если он < 0, то лимита на количество замен нет
+	// str1 := "привет, мир!!!"
+	// ab := strings.Replace(str1, "!", "?", -1) // "привет, мир???"
+	// ba := strings.Replace(ab, "?", "!", 2)    // "привет, мир!!?"
+	// fmt.Printf("ab: %s\nba: %s\n", ab, ba)
+
+	// //Разбиение символов по разделителю sep – strings.Split(s, sep string) []string:
+	// str2 := "привет, мир!!!"
+	// abb := strings.Split(str2, ",") // [привет  мир!!!]
+	// fmt.Println(abb, abb[0])        // привет
+
+	// //Слияние строк с разделителем sep – strings.Join(elems []string, sep string) string:
+	// str3 := []string{"01", "01", "2024"}
+	// str3New := strings.Join(str3, "-") // 01-01-2024
+	// fmt.Println(str3New)
+
+	// //Преобразование символов к нижнему или верхнему регистру – strings.ToLower(s string) или strings.ToUpper(s string):
+	// str4 := "Просто Строка"
+	// lowerStr := strings.ToLower(str4) // просто строка
+	// fmt.Println(lowerStr)
+	// upperStr := strings.ToUpper(str4) // ПРОСТО СТРОКА
+	// fmt.Println(upperStr)
+
+	// // количество итераций может быть в разы больше
+	// sb := strings.Builder{}
+	// fmt.Println(sb)
+	// for range 8 {
+	// 	sb.WriteString("q")
+	// 	fmt.Println(sb)
+	// }
+	// sb.WriteString("end")
+	// fmt.Println(sb.String()) // qqqqqqqqend
+
+	// // var mp map[string]int
+	// // mp["key"] = 1 // panic: assignment to entry in nil map
+
+	// mp := map[string]int{
+	// 	"1": 1,
+	// 	"2": 2,
+	// }
+
+	// fmt.Println(mp) // map[1:1 2:2]
+
+	// // 	Научились создавать мапу, а теперь рассмотрим основные операции над ней:
+
+	// // Вставка: mp[key] = value
+	// // Удаление: delete(mp, key)
+	// // Поиск: value := mp[key]
+
+	// mp1 := map[int]string{
+	// 	1: "a",
+	// }
+
+	// if _, ok := mp1[2]; !ok {
+	// 	fmt.Println("Не найдено") // Не найдено
+	// } else {
+	// 	fmt.Println("Найдено") // Найдено
+	// }
+
+	// value, bol := mp1[1]
+
+	// fmt.Println(value, bol) // a true
+
+	// mp3 := map[int]string{
+	// 	0: "a",
+	// 	1: "b",
+	// 	2: "c",
+	// }
+	// changeMap(mp3)
+	// fmt.Println("Мапа mp в main:", mp3) // map[0:a 1:d 2:c]
+
+	// // type User struct {
+	// // 	ID   int    `json:"id"`
+	// // 	Name string `json:"name"`
+	// // }
+
+	// type Admin struct {
+	// 	ID   int
+	// 	Name string
+	// }
+
+	// // jsonData := `{"id": 1, "name": "Гоша", "age": 20}`
+
+	// // var user User
+	// // err1 := json.Unmarshal([]byte(jsonData), &user)
+	// // if err1 != nil {
+	// // 	fmt.Println("Ошибка при парсинге JSON:", err)
+	// // 	return
+	// // }
+
+	// // fmt.Println("Распарсенный пользователь:", user)
+
+	// // user := User{1, "Gosha"}   // тип User
+	// // admin := Admin{1, "Gosha"} // тип Admin
+	// // // user = admin                 // ошибка
+	// // // fmt.Println(user == admin)   // ошибка
+	// // user = User(admin) // явное преобразование
+
+	// // user0 := User{0, "Гоша"}
+	// // user1 := User{0, "Петя"}
+	// // fmt.Println(user0 == user1, user.ID == admin.ID) // false, true
+	// // fmt.Println(user == User(admin))                 // true
+
+	// user := &User{1, "Гоша", 18}
+	// user.GetUserInfo()
+
+	// user.ChangeUserInfo("Vasya", 30) // Изменение: 1-Вася-20
+	// user.GetUserInfo()
+
+	// printValue("Привет") // Это строка: Привет
+	// printValue(42)       // Это число: 42
+	// printValue(true)     // Неизвестный тип
+
+	// rectangle := Rectangle{5, 6}
+	// fmt.Println(GetArea(rectangle)) // 30
+
+	// // value, ok := obj.(T) // T — произвольный тип type assertion
+
+	// // вместо конкретного типа пишется ключевое слово type
+	// // switch value := obj.(type) {
+	// // case A:
+	// // 	// value имеет тип A
+	// // case B:
+	// // 	// value имеет тип B
+	// // default:
+	// // 	// value имеет тот же тип, что и obj
+	// // }
+
+	// ValueInfo("str")       // Длина строки: 3
+	// ValueInfo([]int{1, 2}) // Емкость слайса: 2
+	// ValueInfo(true)        // Тип bool
+
+	// fmt.Println(NewPerson("Alex", 34))
+
+	// driver := Driver{Name: "Игорь", Car: Car1{Make: "BMW", Color: "black"}}
+
+	// fmt.Println(driver.Name) // Игорь
+	// fmt.Println(driver.Car)  // BMW
+
+	// car := Car{Make: "BMW", Color: "black", Engine: Engine{"V8"}}
+
+	// fmt.Println(car.Model) // V8
+
+	// // создание слайса типа Animals с элементами структур Dog и Cat
+	// animals := []Animals{
+	// 	&Dog{Name: "Шарик"},
+	// 	&Cat{Name: "Мурка"},
+	// }
+
+	// // Вызов методов Voice у объектов слайса Animals
+	// for _, animal := range animals {
+	// 	MakeVoice(animal)
+	// }
+
+	// fmt.Println(DivideNums(1, 0)) // panic and recovery
+	// fmt.Println(DivideNums(1, 2)) // 0.5
+
+	// func() {
+	// 	fmt.Println("Это IIFE в Go!")
+	// }()
+
+	// result := func(a, b int) int {
+	// 	return a + b
+	// }(2, 3)
+	// fmt.Println(result) // 5
+
+	// log.Info("Это информационное сообщение")
+
+	// slc10 := []int{1, 2, 1, 3, 2, 9, 5}
+	// fmt.Println(RemoveDuplicates(slc10)) // 1 2 3 9 5
+	// fmt.Println(slc10)
+
+	fmt.Println("CPU count:", runtime.NumCPU())
+	fmt.Println("GOMAXPROCS:", runtime.GOMAXPROCS(0))
+
+	iterate("Обычный вызов:")
+
+	go iterate("Вызов с go:")
+
+	go func(str string) {
+		fmt.Println(str)
+	}("Анонимная функция с go")
+
+	// time.Sleep(2 * time.Second)
+
+	// bufChannel := make(chan int, 1) // буферизированный канал
+	// unbufChannel := make(chan int)  // небуферизированный канал
+
+	// readingChannel := make(<-chan int) // канал для чтения
+	// writingChannel := make(chan<- int) // канал для записи
+
+	// ch := make(chan int) // инициализация канала
+
+	// go squares(5, ch)
+
+	// // чтение данных до закрытия канала
+	// for val := range ch {
+	// 	fmt.Println(val)
+	// }
+
+	// fmt.Println("Завершение...")
+
+	// unbufChannel := make(chan int)
+	// unbufChannel <- 1 // успешная запись в канал
+	// unbufChannel <- 2 // блокировка, ожидание чтения из канала
+
+	// bufChannel := make(chan int, 2)
+	// bufChannel <- 1 // успешная запись в канал
+	// bufChannel <- 2 // успешная запись в канал
+	// bufChannel <- 3 // блокировка, ожидание чтения из каналаа
+
+	// ch := make(chan int, 2)
+	// go send(ch)
+	// fmt.Println("Емкость и длина канала:", cap(ch), len(ch))
+	// for i := range ch {
+	// 	fmt.Printf("Полученное значение %d, емкость %d, длина %d\n", i, cap(ch), len(ch))
+	// }
+
+	fmt.Println("Запуск main...")
+
+	ch1 := make(chan string)
+	ch2 := make(chan string)
+
+	go database(ch1)
+	go server(ch2)
+
+	// time.Sleep(3 * time.Second) // без задержки отработает оператор default
+
+	select {
+	case response := <-ch1:
+		fmt.Println("Ответ от базы данных:", response)
+	case response := <-ch2:
+		fmt.Println("Ответ от сервера:", response)
+	default:
+		fmt.Println("Ответ не получен")
+	}
+
+	fmt.Println("Завершение main...")
+
+	// Заголовок HTTP-запроса для получения корневой страницы сайта go.dev
+	request := "GET / HTTP/1.1\nHost: go.dev\n\n"
+
+	// Установка TCP-соединения по хосту go.dev и стандартному HTTP-порту 80
+	conn, err := net.Dial("tcp", "go.dev:80")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer conn.Close() // Отложенное закрытие соединения
+
+	// Отправка HTTP-запроса в соединение и обработка ошибки
+	if _, err = conn.Write([]byte(request)); err != nil {
+		log.Fatal(err)
+	}
+
+	// Копирование данных в стандартный поток вывода из соединения
+	io.Copy(os.Stdout, conn)
+
+}
+
+func database(ch chan string) {
+	ch <- "запуск базы данных..."
+}
+
+func server(ch chan string) {
+	ch <- "запуск сервера..."
+}
+
+func send(ch chan int) {
+	ch <- 1
+	ch <- 2
+	ch <- 3 // на этом значении происходит блокировка горутины
+	close(ch)
+}
+
+func squares(num int, ch chan int) {
+	for i := 0; i < num; i++ {
+		ch <- i * i // запись в канал
+	}
+
+	close(ch) // закрытие канала
+}
+
+func iterate(str string) {
+	for i := 0; i < 3; i++ {
+		fmt.Println(str, i)
+	}
+}
+
+func RemoveDuplicates[T comparable](slc []T) []T {
+	var result []T
+	checked := make(map[T]bool)
+
+	for _, val := range slc {
+		if _, ok := checked[val]; !ok {
+			checked[val] = true
+			result = append(result, val)
+		}
+	}
+
+	return result
+}
+
+// Пример обобщённого интерфейса
+type SomeInterface interface {
+	~int
+	SomeMethod()
+}
+
+type ImplementSome int
+
+func (is ImplementSome) SomeMethod() {
+	// реализация метода
+}
+
+func DivideNums(a, b float32) float32 {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("Recovery:", r)
+		}
+	}()
+
+	if b == 0.0 {
+		panic("Division by zero")
+	}
+
+	return a / b
+}
+
+// Пример агрегации
+// Агрегация - это когда один тип ссылается на другой тип
+// Агрегация - это более свободная форма композиции, где один тип может существовать независимо от другого
+
+type Car1 struct {
+	Make  string
+	Color string
+}
+
+type Driver struct {
+	Name string
+	Car  Car1
+}
+
+// Пример композиции
+// Композиция - это когда один тип включает в себя другой тип
+// Композиция - это более строгая форма агрегации, где один тип полностью зависит от другого
+
+type Engine struct {
+	Model string
+}
+
+type Car struct {
+	Make   string
+	Color  string
+	Engine // анонимное поле
+}
+
+// Пример инкапсуляции
+// Инкапсуляция - это механизм, который позволяет скрыть внутреннюю реализацию объекта от внешнего мира
+// Это достигается с помощью использования методов и свойств, которые предоставляют доступ к данным объекта
+// Инкапсуляция позволяет защитить данные объекта от несанкционированного доступа и изменения
+
+type Account struct {
+	balance float64 // приватное поле (с маленькой буквы)
+}
+
+// Конструктор
+func NewAccount(initial float64) *Account {
+	return &Account{balance: initial}
+}
+
+// Публичный метод для получения баланса
+func (a *Account) GetBalance() float64 {
+	return a.balance
+}
+
+// Публичный метод для пополнения счёта
+func (a *Account) Deposit(amount float64) {
+	if amount > 0 {
+		a.balance += amount
+	}
+}
+
+// Публичный метод для снятия средств
+func (a *Account) Withdraw(amount float64) bool {
+	if amount > 0 && a.balance >= amount {
+		a.balance -= amount
+		return true
+	}
+	return false
+}
+
+// Использование:
+// func main() {
+//     acc := NewAccount(100)
+//     acc.Deposit(50)
+//     success := acc.Withdraw(30)
+//     fmt.Println("Баланс:", acc.GetBalance()) // Баланс: 120
+//     fmt.Println("Снятие прошло успешно?", success)
+// }
+
+// Пример полиморфизма
+// Полиморфизм - это способность объектов разных типов реагировать на одно и то же сообщение (метод) по-разному
+// Полиморфизм позволяет использовать один интерфейс для работы с разными типами объектов
+// Полиморфизм достигается с помощью интерфейсов и методов, которые реализуют эти интерфейсы
+// интерфейс для работы с произвольными животными
+// имеет один метод Voice()
+type Animals interface {
+	Voice()
+}
+
+// структура для описания собаки
+type Dog struct {
+	Name string
+}
+
+// структура Dog реализует метод Voice
+// и тем самым удовлетворяет интерфейсу Animals
+func (d *Dog) Voice() {
+	fmt.Printf("%s: Woof\n", d.Name)
+}
+
+// структура для описания кошки
+type Cat struct {
+	Name string
+}
+
+// структура Cat реализует метод Voice
+// и тем самым удовлетворяет интерфейсу Animals
+func (c *Cat) Voice() {
+	fmt.Printf("%s: Meow\n", c.Name)
+}
+
+// функция для вызова метода Voice
+func MakeVoice(a Animals) {
+	a.Voice()
+}
+
+type Person struct {
+	Name string
+	Age  int
+}
+
+func NewPerson(name string, age int) *Person {
+	return &Person{Name: name, Age: age}
+}
+
+func ValueInfo(obj any) {
+	switch val := obj.(type) {
+	case string:
+		fmt.Printf("Длина строки: %d\n", len(val))
+	case []int:
+		fmt.Println("Емкость слайса:", cap(val))
+	default:
+		fmt.Printf("Тип %T", val)
+	}
+}
+
+type Shape interface {
+	Area() float64
+}
+
+type Rectangle struct {
+	Width  float64
+	Height float64
+}
+
+func (r Rectangle) Area() float64 {
+	if r.Width > 0 && r.Height > 0 {
+		return r.Width * r.Height
+	}
+
+	return -1
+}
+
+func GetArea(s Shape) float64 {
+	return s.Area()
+}
+
+func printValue(value interface{}) {
+	switch v := value.(type) {
+	case string:
+		fmt.Println("Это строка:", v)
+	case int:
+		fmt.Println("Это число:", v)
+	default:
+		fmt.Println("Неизвестный тип")
+	}
+}
+
+type User struct {
+	ID   int
+	Name string
+	Age  int
+}
+
+func (u *User) GetUserInfo() {
+	fmt.Printf("%d-%s-%d\n", u.ID, u.Name, u.Age)
+}
+
+func (u *User) ChangeUserInfo(name string, age int) {
+	u.Name = name
+	u.Age = age
+	fmt.Printf("Изменение: %d-%s-%d\n", u.ID, u.Name, u.Age)
+}
+
+func changeMap(map2 map[int]string) {
+	map2 = make(map[int]string)
+	map2[1] = "d"
+	fmt.Println("Мапа map2 в changeMap:", map2)
+}
+
+func slicePointer(slice []int) unsafe.Pointer {
+	return unsafe.Pointer(&slice[0])
+}
+
+func changeArray(arr *[3]int, elem int) {
+	for i, value := range *arr {
+		arr[i] = elem + value
+	}
+}
+
+func printHello(x int) {
+	if x > 5 {
+		println("Hello")
+	} else {
+		println("World")
+	}
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+func incrementValue(val *int) {
+	fmt.Println("Значение val до увеличения:", val) // 0
+	*val += 10
+	fmt.Println("Значение val после увеличения:", val) // 10
+}
