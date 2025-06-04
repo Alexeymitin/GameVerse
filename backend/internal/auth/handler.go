@@ -1,24 +1,27 @@
 package auth
 
 import (
-	"fmt"
 	"gameverse/configs"
+	"gameverse/pkg/jwt"
 	"gameverse/pkg/request"
 	"gameverse/pkg/response"
 	"net/http"
 )
 
 type AuthHandler struct {
-	Config *configs.Config
+	Config      *configs.Config
+	AuthService *AuthService
 }
 
 type AuthHandlerDeps struct {
-	Config *configs.Config
+	Config      *configs.Config
+	AuthService *AuthService
 }
 
 func NewAuthHandler(router *http.ServeMux, deps AuthHandlerDeps) {
 	handler := &AuthHandler{
-		Config: deps.Config,
+		Config:      deps.Config,
+		AuthService: deps.AuthService,
 	}
 	router.HandleFunc("POST /auth/login", handler.Login())
 	router.HandleFunc("POST /auth/register", handler.Register())
@@ -26,17 +29,27 @@ func NewAuthHandler(router *http.ServeMux, deps AuthHandlerDeps) {
 
 func (h *AuthHandler) Login() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		fmt.Printf("Login endpoint hit with secret key: %s\n", h.Config.Auth.SecretKey)
-
 		body, err := request.HandleBody[LoginRequest](&w, req)
 		if err != nil {
 			return
 		}
 
-		fmt.Println("Login request body:", body)
+		email, err := h.AuthService.Login(body.Email, body.Password)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusUnauthorized)
+			return
+		}
+
+		token, err := jwt.NewJWT(h.Config.Auth.Secret).Create(jwt.JWTData{
+			Email: email,
+		})
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 
 		data := LoginResponse{
-			Token: "123",
+			Token: token,
 		}
 
 		response.Json(w, data, http.StatusOK)
@@ -45,17 +58,27 @@ func (h *AuthHandler) Login() http.HandlerFunc {
 
 func (h *AuthHandler) Register() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		fmt.Print("Register endpoint hit\n")
-
 		body, err := request.HandleBody[RegisterRequest](&w, req)
 		if err != nil {
 			return
 		}
 
-		fmt.Println("Login request body:", body)
+		email, err := h.AuthService.Register(body.Email, body.Name, body.Password)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusUnauthorized)
+			return
+		}
 
-		data := LoginResponse{
-			Token: "123",
+		token, err := jwt.NewJWT(h.Config.Auth.Secret).Create(jwt.JWTData{
+			Email: email,
+		})
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		data := RegisterResponse{
+			Token: token,
 		}
 
 		response.Json(w, data, http.StatusOK)

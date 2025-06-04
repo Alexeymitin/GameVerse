@@ -17,7 +17,7 @@ type DbConfig struct {
 }
 
 type AuthConfig struct {
-	SecretKey string
+	Secret string
 }
 
 func LoadConfig() *Config {
@@ -31,7 +31,7 @@ func LoadConfig() *Config {
 			Dsn: os.Getenv("DSN"),
 		},
 		Auth: AuthConfig{
-			SecretKey: os.Getenv("TOKEN"),
+			Secret: os.Getenv("SECRET"),
 		},
 	}
 }

@@ -4,6 +4,7 @@ import (
 	"gameverse/configs"
 	"gameverse/internal/auth"
 	"gameverse/internal/link"
+	"gameverse/internal/user"
 	"gameverse/pkg/db"
 	"gameverse/pkg/middleware"
 	"net/http"
@@ -17,14 +18,20 @@ func main() {
 
 	// Repositories
 	linkRepository := link.NewLinkRepository(db)
+	userRepository := user.NewUserRepository(db)
+
+	//Services
+	authService := auth.NewAuthService(userRepository)
 
 	//Handlers
 	auth.NewAuthHandler(router, auth.AuthHandlerDeps{
-		Config: conf,
+		Config:      conf,
+		AuthService: authService,
 	})
 
 	link.NewLinkHandler(router, link.LinkHandlerDeps{
 		LinkRepository: linkRepository,
+		Config:         conf,
 	})
 
 	// Middleware
