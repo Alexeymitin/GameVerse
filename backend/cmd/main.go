@@ -3,22 +3,39 @@ package main
 import (
 	"gameverse/configs"
 	"gameverse/internal/auth"
+	"gameverse/internal/link"
 	"gameverse/pkg/db"
+	"gameverse/pkg/middleware"
 	"net/http"
 )
 
 func main() {
 	conf := configs.LoadConfig()
-	_ = db.NewDb(conf)
+	db := db.NewDb(conf)
 
 	router := http.NewServeMux()
+
+	// Repositories
+	linkRepository := link.NewLinkRepository(db)
+
+	//Handlers
 	auth.NewAuthHandler(router, auth.AuthHandlerDeps{
 		Config: conf,
 	})
 
+	link.NewLinkHandler(router, link.LinkHandlerDeps{
+		LinkRepository: linkRepository,
+	})
+
+	// Middleware
+	chain := middleware.Chain(
+		middleware.CORS,
+		middleware.Logging,
+	)
+
 	server := http.Server{
 		Addr:    ":8080",
-		Handler: router,
+		Handler: chain(router),
 	}
 
 	println("Backend service is running...")
