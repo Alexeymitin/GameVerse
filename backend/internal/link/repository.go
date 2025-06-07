@@ -3,6 +3,7 @@ package link
 import (
 	"gameverse/pkg/db"
 
+	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
@@ -61,4 +62,17 @@ func (repo *LinkRepository) GetById(id uint) (*Link, error) {
 	}
 
 	return &link, nil
+}
+
+func (repo *LinkRepository) GetLinksCount() int64 {
+	var count int64
+	repo.Database.Table("links").Where("deleted_at is null").Count(&count)
+	return count
+}
+
+func (repo *LinkRepository) GetLinks(limit, offset int) ([]Link, error) {
+	var links []Link
+	query := repo.Database.Table("links").Where("deleted_at is null").Session(&gorm.Session{})
+	query.Order("id asc").Limit(limit).Offset(offset).Scan(&links)
+	return links, repo.Database.DB.Error
 }

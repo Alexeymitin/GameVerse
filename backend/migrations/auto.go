@@ -2,6 +2,7 @@ package main
 
 import (
 	"gameverse/internal/link"
+	"gameverse/internal/stat"
 	"gameverse/internal/user"
 	"os"
 
@@ -21,5 +22,5 @@ func main() {
 		panic("failed to connect to database: " + err.Error())
 	}
 
-	db.AutoMigrate(&link.Link{}, &user.User{})
+	db.AutoMigrate(&link.Link{}, &user.User{}, &stat.Stat{})
 }

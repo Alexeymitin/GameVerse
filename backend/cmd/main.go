@@ -4,8 +4,10 @@ import (
 	"gameverse/configs"
 	"gameverse/internal/auth"
 	"gameverse/internal/link"
+	"gameverse/internal/stat"
 	"gameverse/internal/user"
 	"gameverse/pkg/db"
+	"gameverse/pkg/event"
 	"gameverse/pkg/middleware"
 	"net/http"
 )
@@ -15,13 +17,19 @@ func main() {
 	db := db.NewDb(conf)
 
 	router := http.NewServeMux()
+	eventBus := event.NewEventBus()
 
 	// Repositories
 	linkRepository := link.NewLinkRepository(db)
 	userRepository := user.NewUserRepository(db)
+	statRepository := stat.NewStatRepository(db)
 
 	//Services
 	authService := auth.NewAuthService(userRepository)
+	statService := stat.NewStatService(&stat.StatServiceDeps{
+		EventBus:       eventBus,
+		StatRepository: statRepository,
+	})
 
 	//Handlers
 	auth.NewAuthHandler(router, auth.AuthHandlerDeps{
@@ -31,6 +39,12 @@ func main() {
 
 	link.NewLinkHandler(router, link.LinkHandlerDeps{
 		LinkRepository: linkRepository,
+		EventBus:       eventBus,
+		Config:         conf,
+	})
+
+	stat.NewStatHandler(router, stat.StatHandlerDeps{
+		StatRepository: statRepository,
 		Config:         conf,
 	})
 
@@ -44,6 +58,8 @@ func main() {
 		Addr:    ":8080",
 		Handler: chain(router),
 	}
+
+	go statService.AddClick()
 
 	println("Backend service is running...")
 
