@@ -12,7 +12,7 @@ import (
 	"net/http"
 )
 
-func main() {
+func App() http.Handler {
 	conf := configs.LoadConfig()
 	db := db.NewDb(conf)
 
@@ -48,18 +48,22 @@ func main() {
 		Config:         conf,
 	})
 
+	go statService.AddClick()
+
 	// Middleware
 	chain := middleware.Chain(
 		middleware.CORS,
 		middleware.Logging,
 	)
+	return chain(router)
+}
 
+func main() {
+	app := App()
 	server := http.Server{
 		Addr:    ":8080",
-		Handler: chain(router),
+		Handler: app,
 	}
-
-	go statService.AddClick()
 
 	println("Backend service is running...")
 
