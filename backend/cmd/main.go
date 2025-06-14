@@ -1,7 +1,7 @@
 package main
 
 import (
-	"gameverse/configs"
+	"gameverse/pkg/configs"
 	"gameverse/pkg/db"
 	"net/http"
 )
@@ -21,7 +21,7 @@ func main() {
 		Handler: app,
 	}
 
-	println("Backend service is running...")
+	println("Auth service is running on port:50059")
 
 	server.ListenAndServe()
 }

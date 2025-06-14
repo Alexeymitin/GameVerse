@@ -1,7 +1,7 @@
 package db
 
 import (
-	"gameverse/configs"
+	"gameverse/pkg/configs"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
