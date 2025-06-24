@@ -54,11 +54,11 @@ func app() (http.Handler, *configs.Config) {
 func main() {
 	app, config := app()
 	server := http.Server{
-		Addr:    ":50059",
+		Addr:    ":8000",
 		Handler: app,
 	}
 
-	println("Auth service is running on port:50059")
+	println("Auth service is running on port:8000")
 
 	err := server.ListenAndServeTLS(config.Ssl.SSLCertPath, config.Ssl.SSLKeyPath)
 	if err != nil {
