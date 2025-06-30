@@ -6,6 +6,7 @@ import (
 	"gameverse/services/auth/internal/auth"
 	"gameverse/services/auth/internal/rtoken"
 	"gameverse/services/auth/pkg/model"
+	"time"
 
 	"net/http"
 )
@@ -19,6 +20,13 @@ func app() (http.Handler, *configs.Config) {
 	// repositories
 	userRepo := auth.NewUserRepository(db)
 	refreshTokenRepo := rtoken.NewRefreshTokenRepository(db)
+
+	go func() {
+		for {
+			time.Sleep(24 * time.Hour)
+			_ = refreshTokenRepo.DeleteExpired(time.Now())
+		}
+	}()
 
 	// services
 	refreshTokenService := rtoken.NewRefreshTokenService(&rtoken.RefreshTokenDeps{

@@ -3,6 +3,7 @@ package rtoken
 import (
 	"gameverse/pkg/db"
 	"gameverse/services/auth/pkg/model"
+	"time"
 )
 
 type RefreshTokenRepository interface {
@@ -10,6 +11,7 @@ type RefreshTokenRepository interface {
 	GetByToken(token string) (*model.RefreshToken, error)
 	DeleteByToken(token string) error
 	DeleteAllByUserID(userID string) error
+	DeleteExpired(time.Time) error
 }
 
 type refreshTokenRepo struct {
@@ -41,4 +43,8 @@ func (r *refreshTokenRepo) DeleteByToken(token string) error {
 
 func (r *refreshTokenRepo) DeleteAllByUserID(userID string) error {
 	return r.db.Unscoped().Where("user_id = ?", userID).Delete(&model.RefreshToken{}).Error
+}
+
+func (r *refreshTokenRepo) DeleteExpired(now time.Time) error {
+	return r.db.Unscoped().Where("expires_at < ?", now).Delete(&model.RefreshToken{}).Error
 }
