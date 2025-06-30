@@ -5,6 +5,7 @@ import (
 	"gameverse/pkg/db"
 	"gameverse/services/auth/internal/auth"
 	"gameverse/services/auth/internal/rtoken"
+	"gameverse/services/auth/pkg/model"
 
 	"net/http"
 )
@@ -12,6 +13,7 @@ import (
 func app() (http.Handler, *configs.Config) {
 	config := configs.LoadConfig()
 	db := db.NewDb(config)
+	db.Migrate(&model.User{}, model.RefreshToken{})
 	router := http.NewServeMux()
 
 	// repositories

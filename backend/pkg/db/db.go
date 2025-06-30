@@ -2,7 +2,6 @@ package db
 
 import (
 	"gameverse/pkg/configs"
-	"gameverse/pkg/model"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -18,10 +17,12 @@ func NewDb(config *configs.Config) *DB {
 		panic("failed to connect to database: " + err.Error())
 	}
 
-	err = db.AutoMigrate(&model.User{}, &model.RefreshToken{})
+	return &DB{db}
+}
+
+func (db *DB) Migrate(models ...any) {
+	err := db.AutoMigrate(models...)
 	if err != nil {
 		panic("failed to migrate database: " + err.Error())
 	}
-
-	return &DB{db}
 }

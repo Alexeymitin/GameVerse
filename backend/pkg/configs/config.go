@@ -36,7 +36,7 @@ func LoadConfig() *Config {
 
 	return &Config{
 		Db: DbConfig{
-			Dsn: os.Getenv("DSN"),
+			Dsn: os.Getenv("DSN_AUTH"),
 		},
 		Ssl: SSLConfig{
 			SSLCertPath: os.Getenv("SSL_CERT_PATH"),

@@ -3,7 +3,8 @@ package auth
 import (
 	"errors"
 	"gameverse/pkg/configs"
-	"gameverse/pkg/model"
+	"gameverse/services/auth/pkg/model"
+
 	"gameverse/pkg/utils"
 
 	"github.com/google/uuid"

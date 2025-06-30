@@ -5,9 +5,9 @@ services:
     container_name: postgres_auth
     image: postgres:latest
     environment:
-      POSTGRES_USER: ${POSTGRES_USER} # Имя пользователя БД (берётся из .env)
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} # Пароль пользователя БД (из .env)
-      POSTGRES_DB: ${POSTGRES_DB} # Имя БД (из .env)
+      POSTGRES_USER: ${POSTGRES_USER_AUTH} # Имя пользователя БД (берётся из .env)
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD_AUTH} # Пароль пользователя БД (из .env)
+      POSTGRES_DB: ${POSTGRES_DB_AUTH} # Имя БД (из .env)
       PGDATA: /var/lib/postgresql/data # Путь к данным внутри контейнера
     volumes:
       - ./postgres_data:/var/lib/postgresql/data # Локальная папка для хранения данных БД

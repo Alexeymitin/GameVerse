@@ -2,7 +2,7 @@ package auth
 
 import (
 	"gameverse/pkg/db"
-	"gameverse/pkg/model"
+	"gameverse/services/auth/pkg/model"
 )
 
 type UserRepository interface {
